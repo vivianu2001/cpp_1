@@ -1,11 +1,11 @@
-# Graph Algorithms Implementation
+# 📊 Graph Algorithms Implementation
 
 **Author:** Vivian Umansky  
 **Email:** Umanskyvivian@gmail.com  
 
 ## Overview
 
-This my first assignment in CPP involves creating a class to represent graphs and implementing various algorithms to operate on them. The graph is represented using an adjacency matrix, and the implemented algorithms include determining connectivity, finding the shortest path, detecting cycles, checking bipartiteness, and identifying negative cycles.
+👋 Welcome to my first assignment in CPP! This assignment involves creating a class to represent graphs and implementing various algorithms to operate on them.
 
 ## Files
 
@@ -15,7 +15,7 @@ This my first assignment in CPP involves creating a class to represent graphs an
 
 ## Graph Representation
 
-Graphs are represented using an adjacency matrix, a square matrix where each cell indicates the presence or absence of an edge between two vertices. Diagonal elements represent self-loops, and non-diagonal elements represent edge connections.
+🔍 Graphs are represented using an adjacency matrix, a square matrix where each cell indicates the presence or absence of an edge between two vertices. Diagonal elements represent self-loops, and non-diagonal elements represent edge connections.
 
 ## Implemented Algorithms
 
@@ -41,11 +41,10 @@ Graphs are represented using an adjacency matrix, a square matrix where each cel
 
 ## Code Division
 
-The code is divided into three main files:
+🧩 The code is divided into three main files:
 
 - **Graph.cpp**: Contains the implementation of the `Graph` class.
 - **Algorithms.cpp**: Contains implementations of various graph algorithms.
 - **Demo.cpp**: Provides examples demonstrating the usage of implemented classes and algorithms.
 
 ## Usage
-
