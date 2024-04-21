@@ -1,3 +1,9 @@
+/*
+ID : 322880857
+GMAIL : Umanskyvivian@gmail.com
+*/
+
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest.h"
 using namespace doctest;
@@ -26,11 +32,3 @@ struct ReporterCounter : public ConsoleReporter
 };
 
 REGISTER_REPORTER("counter", 1, ReporterCounter);
-
-int main(int argc, char **argv)
-{
-    Context context;
-    context.addFilter("reporters", "counter");
-    context.run();
-    return return_code;
-}

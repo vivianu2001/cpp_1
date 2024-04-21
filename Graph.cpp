@@ -1,34 +1,26 @@
+// Graph.cpp
+/*
+ID : 322880857
+GMAIL : Umanskyvivian@gmail.com
+*/
 #include "Graph.hpp"
+#include <iostream> // Include iostream header file for std::cout
 
 namespace ariel
 {
-    Graph::Graph()
-    {
-        // Initialize the adjacency matrix as empty
-    }
 
     void Graph::loadGraph(const std::vector<std::vector<int>> &adjacencyMatrix)
     {
-        // Clear the existing adjacency matrix
-        this->adjacencyMatrix.clear();
-
-        // Copy the new adjacency matrix
-        for (const auto &row : adjacencyMatrix)
-        {
-            this->adjacencyMatrix.push_back(row);
-        }
+        this->adjacencyMatrix = adjacencyMatrix;
     }
 
     void Graph::printGraph() const
     {
-        int n = adjacencyMatrix.size();
-        std::cout << "Graph with " << n << " vertices and " << n * (n - 1) / 2 << " edges." << std::endl;
-        // Print the adjacency matrix
         for (const auto &row : adjacencyMatrix)
         {
-            for (int weight : row)
+            for (int val : row)
             {
-                std::cout << weight << " ";
+                std::cout << val << " ";
             }
             std::cout << std::endl;
         }
@@ -39,5 +31,4 @@ namespace ariel
         return adjacencyMatrix;
     }
 
-    // Implement other member functions here.
-}
+} // namespace ariel

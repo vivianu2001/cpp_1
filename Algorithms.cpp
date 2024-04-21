@@ -1,196 +1,198 @@
+// Algorithms.cpp
+/*
+ID : 322880857
+GMAIL : Umanskyvivian@gmail.com
+*/
+
 #include "Algorithms.hpp"
 #include <vector>
 #include <queue>
-#include <algorithm> // For std::min
-#include <cstddef>
+#include <iostream>
 
 namespace ariel
 {
-    namespace Algorithms
+
+    bool Algorithms::isConnected(const Graph &g)
     {
-        bool isCycleUtil(const std::vector<std::vector<int>> &adjacencyMatrix, size_t v, std::vector<bool> &visited, int parent);
+        const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
+        int n = matrix.size();
+        std::vector<bool> visited(n, false);
+        std::queue<int> q;
+        q.push(0);
+        visited[0] = true;
 
-        bool isConnected(const Graph &g)
+        while (!q.empty())
         {
-            const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-            size_t numVertices = adjacencyMatrix.size();
-            std::vector<bool> visited(numVertices, false);
-            std::queue<size_t> q;
-
-            q.push(0);
-            visited[0] = true;
-
-            while (!q.empty())
+            int node = q.front();
+            q.pop();
+            for (int i = 0; i < n; ++i)
             {
-                size_t current = q.front();
-                q.pop();
-
-                for (size_t i = 0; i < numVertices; ++i)
+                if (matrix[node][i] && !visited[i])
                 {
-                    if (adjacencyMatrix[current][i] && !visited[i])
-                    {
-                        q.push(i);
-                        visited[i] = true;
-                    }
+                    visited[i] = true;
+                    q.push(i);
                 }
             }
-
-            return std::all_of(visited.begin(), visited.end(), [](bool v)
-                               { return v; });
         }
 
-        std::string shortestPath(const Graph &g, size_t start, size_t end)
+        for (bool v : visited)
         {
-            const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-            size_t numVertices = adjacencyMatrix.size();
-            std::vector<std::vector<int>> dist = adjacencyMatrix;
+            if (!v)
+                return false; // If any node is not visited, graph is not connected
+        }
+        return true;
+    }
 
-            for (size_t k = 0; k < numVertices; ++k)
+    std::string Algorithms::shortestPath(const Graph &g, int start, int end)
+    {
+        const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
+        int n = matrix.size();
+        std::vector<int> dist(n, -1);
+        std::vector<int> prev(n, -1);
+        std::queue<int> q;
+        q.push(start);
+        dist[start] = 0;
+
+        while (!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+            for (int i = 0; i < n; ++i)
             {
-                for (size_t i = 0; i < numVertices; ++i)
+                if (matrix[node][i] && dist[i] == -1)
                 {
-                    for (size_t j = 0; j < numVertices; ++j)
-                    {
-                        if (dist[i][k] != 0 && dist[k][j] != 0 && (dist[i][j] == 0 || dist[i][j] > dist[i][k] + dist[k][j]))
-                        {
-                            if (dist[i][k] + dist[k][j] < dist[i][j])
-                            {
-                                // Handle negative cycle
-                                return "-1";
-                            }
-                            dist[i][j] = dist[i][k] + dist[k][j];
-                        }
-                    }
+                    dist[i] = dist[node] + 1;
+                    prev[i] = node;
+                    q.push(i);
                 }
             }
-
-            if (dist[start][end] == 0)
-            {
-                return "-1";
-            }
-
-            std::string path = std::to_string(start);
-            size_t current = start;
-            while (current != end)
-            {
-                for (size_t i = 0; i < numVertices; ++i)
-                {
-                    if (dist[current][i] != 0 && dist[i][end] != 0 && dist[current][end] == dist[current][i] + dist[i][end])
-                    {
-                        path += "->" + std::to_string(i);
-                        current = i;
-                        break;
-                    }
-                }
-            }
-
-            return path;
         }
 
-        bool isContainsCycle(const Graph &g)
+        if (dist[end] == -1)
         {
-            const auto &adjacencyMatrix = g.getAdjacencyMatrix();
-            size_t numVertices = adjacencyMatrix.size();
-            std::vector<bool> visited(numVertices, false);
+            return "-1"; // No path found
+        }
 
-            for (size_t i = 0; i < numVertices; ++i)
+        // Reconstruct the shortest path
+        std::string shortestPath = std::to_string(end);
+        int current = end;
+        while (current != start)
+        {
+            current = prev[current];
+            shortestPath = std::to_string(current) + "->" + shortestPath;
+        }
+
+        return shortestPath;
+    }
+
+    bool Algorithms::isContainsCycle(const Graph &g)
+    {
+        const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
+        int n = matrix.size();
+        std::vector<bool> visited(n, false);
+        std::vector<bool> recStack(n, false);
+
+        for (int i = 0; i < n; ++i)
+        {
+            if (!visited[i] && isCycleUtil(matrix, i, visited, recStack))
             {
-                if (!visited[i] && isCycleUtil(adjacencyMatrix, i, visited, -1))
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool Algorithms::isCycleUtil(const std::vector<std::vector<int>> &matrix, int v, std::vector<bool> &visited, std::vector<bool> &recStack)
+    {
+        visited[v] = true;
+        recStack[v] = true;
+
+        for (int i = 0; i < static_cast<int>(matrix.size()); ++i)
+
+        {
+            if (matrix[v][i])
+            {
+                if (!visited[i] && isCycleUtil(matrix, i, visited, recStack))
+                {
+                    return true;
+                }
+                else if (recStack[i])
                 {
                     return true;
                 }
             }
-            return false;
         }
+        recStack[v] = false;
+        return false;
+    }
 
-        bool isCycleUtil(const std::vector<std::vector<int>> &adjacencyMatrix, size_t v, std::vector<bool> &visited, int parent)
+    bool Algorithms::isBipartite(const Graph &g)
+    {
+        const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
+        int n = matrix.size();
+        std::vector<int> color(n, -1);
+        std::queue<int> q;
+
+        for (int i = 0; i < n; ++i)
         {
-            visited[v] = true;
-            for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
+            if (color[i] == -1)
             {
-                if (adjacencyMatrix[v][i])
+                q.push(i);
+                color[i] = 0;
+                while (!q.empty())
                 {
-                    if (!visited[i])
+                    int u = q.front();
+                    q.pop();
+                    for (int v = 0; v < n; ++v)
                     {
-                        if (isCycleUtil(adjacencyMatrix, i, visited, v))
+                        if (matrix[u][v] && color[v] == -1)
                         {
-                            return true;
+                            color[v] = 1 - color[u];
+                            q.push(v);
                         }
-                    }
-                    else if (i != parent)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        std::string isBipartite(const Graph &g)
-        {
-            const auto &adjMatrix = g.getAdjacencyMatrix();
-            size_t numVertices = adjMatrix.size();
-            std::vector<int> color(numVertices, -1);
-            std::vector<size_t> partitionA, partitionB;
-
-            std::queue<size_t> q;
-            for (size_t i = 0; i < numVertices; ++i)
-            {
-                if (color[i] == -1)
-                {
-                    color[i] = 1;
-                    partitionA.push_back(i);
-                    q.push(i);
-                    while (!q.empty())
-                    {
-                        size_t u = q.front();
-                        q.pop();
-                        for (size_t v = 0; v < numVertices; ++v)
+                        else if (matrix[u][v] && color[u] == color[v])
                         {
-                            if (adjMatrix[u][v])
-                            {
-                                if (color[v] == -1)
-                                {
-                                    color[v] = 1 - color[u];
-                                    if (color[v] == 1)
-                                        partitionA.push_back(v);
-                                    else
-                                        partitionB.push_back(v);
-                                    q.push(v);
-                                }
-                                else if (color[v] == color[u])
-                                {
-                                    return "The graph is not bipartite.";
-                                }
-                            }
+                            return false;
                         }
                     }
                 }
             }
+        }
+        return true;
+    }
 
-            std::string result = "The graph is bipartite: A={";
+    bool Algorithms::negativeCycle(const Graph &g)
+    {
+        const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
+        int n = matrix.size();
+        std::vector<int> dist(n, INT_MAX);
 
-            // Add elements of partitionA to the string
-            for (size_t i = 0; i < partitionA.size(); ++i)
+        for (int i = 0; i < n; ++i)
+        {
+            for (int u = 0; u < n; ++u)
             {
-                result += std::to_string(partitionA[i]);
-                if (i < partitionA.size() - 1) // Add comma if it's not the last element
-                    result += ", ";
+                for (int v = 0; v < n; ++v)
+                {
+                    if (matrix[u][v] != 0 && dist[u] != INT_MAX && dist[u] + matrix[u][v] < dist[v])
+                    {
+                        dist[v] = dist[u] + matrix[u][v];
+                    }
+                }
             }
-
-            result += "}, B={";
-
-            // Add elements of partitionB to the string
-            for (size_t i = 0; i < partitionB.size(); ++i)
-            {
-                result += std::to_string(partitionB[i]);
-                if (i < partitionB.size() - 1) // Add comma if it's not the last element
-                    result += ", ";
-            }
-
-            result += "}";
-
-            return result;
         }
 
-    } // namespace Algorithms
+        for (int u = 0; u < n; ++u)
+        {
+            for (int v = 0; v < n; ++v)
+            {
+                if (matrix[u][v] != 0 && dist[u] != INT_MAX && dist[u] + matrix[u][v] < dist[v])
+                {
+                    return true; // Found a negative cycle
+                }
+            }
+        }
+
+        return false; // No negative cycle found
+    }
+
 } // namespace ariel
