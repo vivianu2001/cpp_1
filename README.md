@@ -1,4 +1,4 @@
-# 📊 Graph Algorithms Implementation
+# 🧮 Graph Algorithms Implementation
 
 **Author:** Vivian Umansky  
 **Email:** Umanskyvivian@gmail.com  
@@ -7,7 +7,7 @@
 
 👋 Welcome to my first assignment in CPP! This assignment involves creating a class to represent graphs and implementing various algorithms to operate on them.
 
-## Files
+## Files 
 
 - **Graph.cpp**: Contains the implementation of the `Graph` class for graph representation.
 - **Algorithms.cpp**: Implements various graph algorithms including `isConnected`, `shortestPath`, `isContainsCycle`, `isBipartite`, and `negativeCycle`.
