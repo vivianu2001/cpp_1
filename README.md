@@ -1,7 +1,7 @@
 # Graph Algorithms Implementation
 
-**Author:** [Vivian Umansky]  
-**Email:** [Umanskyvivian@gmail.com]  
+**Author:** Vivian Umansky  
+**Email:** Umanskyvivian@gmail.com  
 
 ## Overview
 
