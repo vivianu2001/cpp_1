@@ -106,3 +106,17 @@ TEST_CASE("Test invalid graph")
         {0, 0, 0, 5}};
     CHECK_THROWS(g.loadGraph(graph));
 }
+
+TEST_CASE("Graph with Self-loops and Parallel Edges")
+{
+    ariel::Graph g;
+    std::vector<std::vector<int>> graphWithLoops = {
+        {1, 2, 0},
+        {2, 1, 3},
+        {0, 3, 1}};
+    g.loadGraph(graphWithLoops);
+    CHECK(ariel::Algorithms::isConnected(g) == true);
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 2) == "0->1->2");
+    CHECK(ariel::Algorithms::isContainsCycle(g) == true);
+    CHECK(doctest::toString(ariel::Algorithms::isBipartite(g)) == "0");
+}
