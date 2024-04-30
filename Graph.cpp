@@ -44,17 +44,17 @@ namespace ariel
             }
         }
 
-        // Check for invalid weights
-        for (const auto &row : matrix)
-        {
-            for (int weight : row)
-            {
-                if (weight < 0)
-                {
-                    throw std::invalid_argument("Weights must be non-negative.");
-                }
-            }
-        }
+        // // Check for invalid weights
+        // for (const auto &row : matrix)
+        // {
+        //     for (int weight : row)
+        //     {
+        //         if (weight < 0 && )
+        //         {
+        //             throw std::invalid_argument("Weights must be non-negative.");
+        //         }
+        //     }
+        // }
 
         // Set the adjacency matrix
         adjacencyMatrix = matrix;

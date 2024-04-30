@@ -15,7 +15,7 @@ namespace ariel
 
         static std::string isContainsCycle(const Graph &g);
         static std::string isBipartite(const Graph &g);
-        static bool negativeCycle(const Graph &g);
+        static std::string negativeCycle(const Graph &g);
 
     private:
         static bool isCycleUtil(const std::vector<std::vector<int>> &matrix, int v, std::vector<bool> &visited, std::vector<int> &cyclePath, std::vector<bool> &recStack, int parent);

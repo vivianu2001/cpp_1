@@ -214,38 +214,67 @@ namespace ariel
         return result;
     }
 
-    bool Algorithms::negativeCycle(const Graph &g)
+    std::string Algorithms::negativeCycle(const Graph &g)
     {
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
         int n = matrix.size();
-        std::vector<int> dist(n, INT_MAX);
+        std::vector<int> dist(n, std::numeric_limits<int>::max()); // Initialize distances with infinity
+        std::vector<int> prev(n, -1);                              // Keep track of predecessors
 
-        for (int i = 0; i < n; ++i)
+        // Bellman-Ford algorithm to relax edges for |V| - 1 iterations
+        dist[0] = 0; // Start from a source node, typically the first node
+        for (int k = 0; k < n - 1; ++k)
         {
             for (int u = 0; u < n; ++u)
             {
                 for (int v = 0; v < n; ++v)
                 {
-                    if (matrix[u][v] != 0 && dist[u] != INT_MAX && dist[u] + matrix[u][v] < dist[v])
+                    if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
                     {
                         dist[v] = dist[u] + matrix[u][v];
+                        prev[v] = u;
                     }
                 }
             }
         }
 
+        // Check for negative cycles
         for (int u = 0; u < n; ++u)
         {
             for (int v = 0; v < n; ++v)
             {
-                if (matrix[u][v] != 0 && dist[u] != INT_MAX && dist[u] + matrix[u][v] < dist[v])
+                if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
                 {
-                    return true; // Found a negative cycle
+                    std::vector<int> cycle;
+                    int x = v;
+                    for (int i = 0; i < n; i++)
+                    {
+                        x = prev[x];
+                    }
+                    int start = x;
+                    do
+                    {
+                        cycle.push_back(x);
+                        x = prev[x];
+                    } while (x != start);
+
+                    cycle.push_back(start);
+                    std::reverse(cycle.begin(), cycle.end());
+
+                    std::string cycleStr;
+                    for (size_t l = 0; l < cycle.size(); ++l)
+                    {
+                        cycleStr += std::to_string(cycle[l]);
+                        if (l < cycle.size() - 1)
+                        {
+                            cycleStr += "->";
+                        }
+                    }
+                    return "Negative cycle found: " + cycleStr;
                 }
             }
         }
-
-        return false; // No negative cycle found
+        return "No negative cycle found";
     }
 
     std::string Algorithms::shortestPath(const Graph &g, int start, int end)
