@@ -19,29 +19,34 @@
 
 ## Implemented Algorithms
 
-1. **isConnected(g)**:
+- **isConnected(g)**
+  - **Implementation:** Utilizes BFS for undirected graphs and a series of DFS checks for directed graphs to ensure strong connectivity.
+  - **Output:** Returns `true` if the graph is connected; otherwise, returns `false`.
 
-   - Determines if the given graph `g` is connected.
-   - Returns 1 if the graph is connected, otherwise returns 0.
+### Shortest Path
 
-2. **shortestPath(g, start, end)**:
+- **shortestPath(g, start, end)**
+  - **Implementation:** Uses Dijkstra's algorithm, leveraging a priority queue to manage the frontier vertices.
+  - **Output:** Returns a string representing the path by listing vertices (e.g., "0->1->2") if a path exists; otherwise, returns "-1".
 
-   - Finds the shortest path between the start and end vertices in the graph `g`.
-   - Returns the path as a sequence of vertices if exists, otherwise returns -1.
+### Cycle Detection
 
-3. **isContainsCycle(g)**:
+- **isContainsCycle(g)**
+  - **Implementation:** Applies DFS to explore the graph, using recursion to track visited nodes and detect backtracking.
+  - **Output:** Returns "The cycle is: [cycle path]" if a cycle is detected (e.g., "0->1->2->0"); otherwise, returns "No cycle found."
 
-   - Detects if the given graph `g` contains any cycles.
-   - Returns 1 if a cycle exists, otherwise returns 0.
+### Bipartiteness Check
 
-4. **isBipartite(g)**:
+- **isBipartite(g)**
+  - **Implementation:** Uses BFS to attempt coloring the graph, starting from uncolored vertices.
+  - **Output:** If bipartite, returns a string detailing the groups (e.g., "The graph is bipartite: A={0, 2}, B={1}"); otherwise, returns "The graph is not bipartite."
 
-   - Checks if the graph `g` can be partitioned into two sets such that no two vertices within the same set are adjacent.
-   - Returns the partitioning of the graph if bipartite, otherwise returns 0.
+### Negative Cycle Detection
 
-5. **negativeCycle(g)**:
-   - Identifies if the given graph `g` contains a negative cycle.
-   - Prints the negative cycle if exists, otherwise indicates that no negative cycle is present.
+- **negativeCycle(g)**
+  - **Implementation:** Employs the Bellman-Ford algorithm, iterating over all vertices to relax edges repeatedly and check for changes beyond the expected iterations.
+  - **Output:** Returns "Negative cycle found: [cycle path]" detailing the vertices in the negative cycle if one is found (e.g., "Negative cycle found: 0->1->2->0"); otherwise, states "No negative cycle found."
+
 
 ## Code Division
 
