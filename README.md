@@ -57,7 +57,7 @@ To use this project, follow these steps:
 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
-3. Build the project using the provided Makefile:
+3. Build the project using the provided Makefile and it will run for you the tests:
    ```bash
    make all
    ```
