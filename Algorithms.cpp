@@ -15,7 +15,7 @@ namespace ariel
         }
         else
         {
-            // Use the algorithm for undirected graphs
+            // Use bfs algorithm for undirected graphs
             const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
             int n = matrix.size();
             std::vector<bool> visited(n, false);
