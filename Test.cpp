@@ -274,3 +274,19 @@ TEST_CASE("25-Two Nodes with Negative Edge")
     g.loadGraph(graph, true);
     CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 1->0->1");
 }
+TEST_CASE("26-Shortest Path with Negative Weights") // SHOW TEST!
+{
+    // Create a graph with negative weights
+    ariel::Graph g;
+    std::vector<std::vector<int>> graph26 = {
+        {0, 1, 3, 0},
+        {0, 0, 0, -1},
+        {0, 0, 0, 1},
+        {0, 0, 0, 0}};
+
+    // Load the graph and check for connectivity
+    g.loadGraph(graph26, true);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
+    // The shortest path should be "0->1->3"
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 3) == "0->1->3");
+}
