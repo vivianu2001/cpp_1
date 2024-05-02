@@ -19,14 +19,14 @@ test: TestCounter.o Graph.o Algorithms.o Test.o
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 
-valgrind: demo test_counter
+valgrind: demo test
 	valgrind $(VALGRIND_FLAGS) ./demo
-	valgrind $(VALGRIND_FLAGS) ./test_counter
+	valgrind $(VALGRIND_FLAGS) ./test
 
 clean:
-	rm -f $(OBJECTS) demo test_counter
+	rm -f $(OBJECTS) demo test
 
 tidy:
 	clang-tidy $(SOURCES) -- -$(CXXFLAGS)
 
-.PHONY: all run demo test_counter clean tidy valgrind
+.PHONY: all run demo test clean tidy valgrind
