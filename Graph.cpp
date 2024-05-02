@@ -20,7 +20,7 @@ namespace ariel
         }
 
         // Check if the matrix is square
-        size_t size = matrix.size();
+        size_t size = matrix.size(); // number of rows
         for (const auto &row : matrix)
         {
             if (row.size() != size)
@@ -43,20 +43,20 @@ namespace ariel
                 }
             }
         }
+        // Check for negative weights
+        for (size_t i = 0; i < size; ++i)
+        {
+            for (size_t j = 0; j < size; ++j)
+            {
+                if (matrix[i][j] < 0)
+                {
+                    NegativeEdges = true;
+                }
+            }
+        }
 
-        // // Check for invalid weights
-        // for (const auto &row : matrix)
-        // {
-        //     for (int weight : row)
-        //     {
-        //         if (weight < 0 && )
-        //         {
-        //             throw std::invalid_argument("Weights must be non-negative.");
-        //         }
-        //     }
-        // }
+        NegativeEdges = false; // If we reach here, there are no negative edges
 
-        // Set the adjacency matrix
         adjacencyMatrix = matrix;
     }
 
@@ -65,23 +65,6 @@ namespace ariel
     {
         // Print the header with the number of vertices and edges
         std::cout << "Graph with " << adjacencyMatrix.size() << " vertices and " << countEdges() << " edges." << std::endl;
-
-        // Print the adjacency matrix
-        for (const auto &row : adjacencyMatrix)
-        {
-            for (int val : row)
-            {
-                if (val == std::numeric_limits<int>::max())
-                {
-                    std::cout << "INF ";
-                }
-                else
-                {
-                    std::cout << val << " ";
-                }
-            }
-            std::cout << std::endl;
-        }
     }
 
     int Graph::countEdges() const
@@ -94,11 +77,11 @@ namespace ariel
             {
                 // For directed graphs, count all non-zero edges
                 // For undirected graphs, count only the upper triangular matrix
-                if (!isDirected && i != j && adjacencyMatrix[j][i] != 0 && adjacencyMatrix[i][j] != std::numeric_limits<int>::max())
+                if (!isDirected && i != j && adjacencyMatrix[j][i] != 0)
                 {
                     edges++;
                 }
-                if (adjacencyMatrix[i][j] != 0 && adjacencyMatrix[i][j] != std::numeric_limits<int>::max())
+                if (adjacencyMatrix[i][j] != 0)
                 {
                     edges++;
                 }

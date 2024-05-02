@@ -19,7 +19,12 @@ namespace ariel
 
     private:
         static bool isCycleUtil(const std::vector<std::vector<int>> &matrix, int v, std::vector<bool> &visited, std::vector<int> &cyclePath, std::vector<bool> &recStack, int parent);
-        static void dfs(const std::vector<std::vector<int>> &matrix, std::vector<bool> &visited, int node); // Add this declaration
+        static void dfs(const std::vector<std::vector<int>> &matrix, std::vector<bool> &visited, int node);
+        static bool bfs(const std::vector<std::vector<int>> &matrix, int start);
+        static bool checkBipartite(const std::vector<std::vector<int>> &matrix, std::vector<int> &color, int start);
+        static std::string buildBipartiteResult(const std::vector<int> &color);
+        static bool bellmanFord(const std::vector<std::vector<int>> &matrix, int source, std::vector<int> &dist, std::vector<int> &prev);
+        static std::vector<int> dijkstra(const std::vector<std::vector<int>> &matrix, int start);
     };
 }
 

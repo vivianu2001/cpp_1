@@ -6,57 +6,70 @@
 
 namespace ariel
 {
+    bool Algorithms::bfs(const std::vector<std::vector<int>> &matrix, int start)
+    {
+        int n = matrix.size();
+        std::vector<bool> visited(n, false);
+        std::queue<int> q;
+        q.push(start);
+        visited[start] = true;
+
+        while (!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+
+            for (int i = 0; i < n; ++i)
+            {
+                if (matrix[node][i] && !visited[i])
+                {
+                    visited[i] = true;
+                    q.push(i);
+                }
+            }
+        }
+
+        // Check if all nodes were visited
+        for (bool v : visited)
+        {
+            if (!v)
+                return false;
+        }
+
+        return true;
+    }
+
     bool Algorithms::isConnected(const Graph &g)
     {
+        const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
+        int n = matrix.size();
+
         if (g.getIsDirected())
         {
-            // Use the algorithm for directed graphs
             return isStronglyConnected(g);
         }
         else
         {
-            // Use bfs algorithm for undirected graphs
-            const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
-            int n = matrix.size();
-            std::vector<bool> visited(n, false);
-            std::queue<int> q;
-
+            // Find a starting node that is not isolated (if possible)
             int start = -1;
             for (int i = 0; i < n; ++i)
             {
-                if (!matrix[i].empty())
+                for (int j = 0; j < n; ++j)
                 {
-                    start = i;
-                    break;
+                    if (matrix[i][j] != 0)
+                    {
+                        start = i;
+                        break;
+                    }
                 }
+                if (start != -1)
+                    break;
             }
 
             if (start == -1)
-                return true; // Empty graph is considered connected
+                return false; // Graph is empty or all nodes are isolated
 
-            q.push(start);
-            visited[start] = true;
-
-            while (!q.empty())
-            {
-                int node = q.front();
-                q.pop();
-                for (int i = 0; i < n; ++i)
-                {
-                    if (matrix[node][i] && !visited[i])
-                    {
-                        visited[i] = true;
-                        q.push(i);
-                    }
-                }
-            }
-
-            for (bool v : visited)
-            {
-                if (!v)
-                    return false; // If any node is not visited, graph is not connected
-            }
-            return true;
+            return bfs(matrix, start);
         }
     }
 
@@ -150,136 +163,201 @@ namespace ariel
         return "No cycle found.";
     }
 
-    std::string Algorithms::isBipartite(const Graph &g)
+    bool Algorithms::checkBipartite(const std::vector<std::vector<int>> &matrix, std::vector<int> &color, int start)
     {
-        const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
-        int n = matrix.size();
-        std::vector<int> color(n, -1);
         std::queue<int> q;
+        q.push(start);
+        color[start] = 0;
 
-        for (int i = 0; i < n; ++i)
+        while (!q.empty())
         {
-            if (color[i] == -1)
+            int u = q.front();
+            q.pop();
+
+            for (int v = 0; v < matrix.size(); ++v)
             {
-                q.push(i);
-                color[i] = 0;
-                while (!q.empty())
-                {
-                    int u = q.front();
-                    q.pop();
-                    for (int v = 0; v < n; ++v)
-                    {
-                        // Only consider edges with non-zero weights
-                        if (matrix[u][v] != 0 && color[v] == -1)
-                        {
-                            color[v] = 1 - color[u];
-                            q.push(v);
-                        }
-                        else if (matrix[u][v] != 0 && color[u] == color[v])
-                        {
-                            return "The graph is not bipartite.";
-                        }
+                if (matrix[u][v] != 0)
+                { // There is an edge
+                    if (color[v] == -1)
+                    {                            // If not colored
+                        color[v] = 1 - color[u]; // Color with opposite color
+                        q.push(v);
+                    }
+                    else if (color[v] == color[u])
+                    {                 // If same color as parent
+                        return false; // Not bipartite
                     }
                 }
             }
         }
+        return true;
+    }
 
-        // Build the partitions based on colors
+    std::string Algorithms::buildBipartiteResult(const std::vector<int> &color)
+    {
         std::vector<int> A, B;
-        for (int i = 0; i < n; ++i)
+        for (int i = 0; i < color.size(); ++i)
         {
             if (color[i] == 0)
                 A.push_back(i);
-            else
+            else if (color[i] == 1)
                 B.push_back(i);
         }
 
-        // Build the result string
         std::string result = "The graph is bipartite: A={";
-        for (std::vector<int>::size_type i = 0; i < A.size(); ++i)
+        for (size_t i = 0; i < A.size(); ++i)
         {
             result += std::to_string(A[i]);
             if (i < A.size() - 1)
                 result += ", ";
         }
         result += "}, B={";
-        for (std::vector<int>::size_type i = 0; i < B.size(); ++i)
+        for (size_t i = 0; i < B.size(); ++i)
         {
             result += std::to_string(B[i]);
             if (i < B.size() - 1)
                 result += ", ";
         }
         result += "}";
-
         return result;
+    }
+
+    std::string Algorithms::isBipartite(const Graph &g)
+    {
+        const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
+        int n = matrix.size();
+        std::vector<int> color(n, -1);
+
+        for (int i = 0; i < n; ++i)
+        {
+            if (color[i] == -1)
+            { // If this component isn't colored yet
+                if (!checkBipartite(matrix, color, i))
+                {
+                    return "The graph is not bipartite.";
+                }
+            }
+        }
+
+        return buildBipartiteResult(color);
     }
 
     std::string Algorithms::negativeCycle(const Graph &g)
     {
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
         int n = matrix.size();
-        std::vector<int> dist(n, std::numeric_limits<int>::max()); // Initialize distances with infinity
-        std::vector<int> prev(n, -1);                              // Keep track of predecessors
+        std::vector<int> dist, prev;
 
-        // Bellman-Ford algorithm to relax edges for |V| - 1 iterations
-        dist[0] = 0; // Start from a source node, typically the first node
-        for (int k = 0; k < n - 1; ++k)
+        if (!bellmanFord(matrix, 0, dist, prev))
         {
+            // Find and construct the negative cycle path
             for (int u = 0; u < n; ++u)
             {
                 for (int v = 0; v < n; ++v)
                 {
-                    if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
+                    if (matrix[u][v] != 0 && dist[u] + matrix[u][v] < dist[v])
                     {
-                        dist[v] = dist[u] + matrix[u][v];
-                        prev[v] = u;
-                    }
-                }
-            }
-        }
-
-        // Check for negative cycles
-        for (int u = 0; u < n; ++u)
-        {
-            for (int v = 0; v < n; ++v)
-            {
-                if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
-                {
-                    std::vector<int> cycle;
-                    int x = v;
-                    for (int i = 0; i < n; i++)
-                    {
-                        x = prev[x];
-                    }
-                    int start = x;
-                    do
-                    {
-                        cycle.push_back(x);
-                        x = prev[x];
-                    } while (x != start);
-
-                    cycle.push_back(start);
-                    std::reverse(cycle.begin(), cycle.end());
-
-                    std::string cycleStr;
-                    for (size_t l = 0; l < cycle.size(); ++l)
-                    {
-                        cycleStr += std::to_string(cycle[l]);
-                        if (l < cycle.size() - 1)
+                        std::vector<int> cycle;
+                        int x = v;
+                        do
                         {
-                            cycleStr += "->";
+                            cycle.push_back(x);
+                            x = prev[x];
+                        } while (x != v);
+                        cycle.push_back(v);
+                        std::reverse(cycle.begin(), cycle.end());
+
+                        std::string cycleStr = "Negative cycle found: ";
+                        for (size_t i = 0; i < cycle.size(); ++i)
+                        {
+                            cycleStr += std::to_string(cycle[i]) + (i < cycle.size() - 1 ? "->" : "");
                         }
+                        return cycleStr;
                     }
-                    return "Negative cycle found: " + cycleStr;
                 }
             }
         }
+
         return "No negative cycle found";
     }
-
     std::string Algorithms::shortestPath(const Graph &g, int start, int end)
     {
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
+        int n = matrix.size();
+
+        if (g.NegativeEdges)
+        {
+            // Use Bellman-Ford algorithm for graphs with negative edges
+            std::vector<int> dist(n, std::numeric_limits<int>::max());
+            std::vector<int> prev(n, -1);
+
+            if (!bellmanFord(matrix, start, dist, prev))
+            {
+                // Negative cycle detected, return appropriate message
+                return "Negative cycle detected, shortest path not defined.";
+            }
+
+            // Reconstruct the shortest path
+            std::vector<int> path;
+            int current = end;
+            while (current != -1)
+            {
+                path.push_back(current);
+                current = prev[current];
+            }
+            std::reverse(path.begin(), path.end());
+
+            // Convert the path to a string
+            std::string pathStr;
+            for (size_t i = 0; i < path.size(); ++i)
+            {
+                pathStr += std::to_string(path[i]);
+                if (i < path.size() - 1)
+                {
+                    pathStr += "->";
+                }
+            }
+            return pathStr;
+        }
+        else
+        {
+            // Use Dijkstra's algorithm for graphs without negative edges
+            std::vector<int> prev = dijkstra(matrix, start);
+
+            // Reconstruct the shortest path if it exists
+            if (prev[end] == -1)
+            {
+                return "-1"; // No path exists between start and end vertices
+            }
+            else
+            {
+                // Reconstruct the shortest path
+                std::vector<int> path;
+                int current = end;
+                while (current != -1)
+                {
+                    path.push_back(current);
+                    current = prev[current];
+                }
+                std::reverse(path.begin(), path.end());
+
+                // Convert the path to a string
+                std::string pathStr;
+                for (size_t i = 0; i < path.size(); ++i)
+                {
+                    pathStr += std::to_string(path[i]);
+                    if (i < path.size() - 1)
+                    {
+                        pathStr += "->";
+                    }
+                }
+                return pathStr;
+            }
+        }
+    }
+
+    std::vector<int> Algorithms::dijkstra(const std::vector<std::vector<int>> &matrix, int start)
+    {
         int n = matrix.size();
         std::vector<int> dist(n, INT_MAX);
         std::vector<int> prev(n, -1);
@@ -312,35 +390,45 @@ namespace ariel
             }
         }
 
-        // Reconstruct the shortest path if it exists
-        if (dist[end] == INT_MAX)
-        {
-            return "-1"; // No path exists between start and end vertices
-        }
-        else
-        {
-            // Reconstruct the shortest path
-            std::vector<int> path;
-            int current = end;
-            while (current != -1)
-            {
-                path.push_back(current);
-                current = prev[current];
-            }
-            std::reverse(path.begin(), path.end());
-
-            // Convert the path to a string
-            std::string pathStr;
-            for (size_t i = 0; i < path.size(); ++i)
-            {
-                pathStr += std::to_string(path[i]);
-                if (i < path.size() - 1)
-                {
-                    pathStr += "->";
-                }
-            }
-            return pathStr;
-        }
+        return prev; // Return the vector of predecessors
     }
 
+    bool Algorithms::bellmanFord(const std::vector<std::vector<int>> &matrix, int source, std::vector<int> &dist, std::vector<int> &prev)
+    {
+        int n = matrix.size();
+        dist.assign(n, std::numeric_limits<int>::max());
+        prev.assign(n, -1);
+
+        dist[source] = 0; // Initialize the source vertex distance to zero
+
+        // Relax all edges |V-1| times
+        for (int i = 0; i < n - 1; ++i)
+        {
+            for (int u = 0; u < n; ++u)
+            {
+                for (int v = 0; v < n; ++v)
+                {
+                    if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
+                    {
+                        dist[v] = dist[u] + matrix[u][v];
+                        prev[v] = u;
+                    }
+                }
+            }
+        }
+
+        // Check for negative weight cycles
+        for (int u = 0; u < n; ++u)
+        {
+            for (int v = 0; v < n; ++v)
+            {
+                if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
+                {
+                    return false; // Negative cycle detected
+                }
+            }
+        }
+
+        return true; // No negative cycles found
+    }
 } // namespace ariel

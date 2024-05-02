@@ -18,7 +18,7 @@ namespace ariel
         Graph(bool directed = false);
 
         // Load the adjacency matrix into the graph, with checks for proper structure
-        void loadGraph(const std::vector<std::vector<int>> &matrix ,bool directed);
+        void loadGraph(const std::vector<std::vector<int>> &matrix, bool directed);
 
         // Print the graph to standard output
         void printGraph() const;
@@ -28,6 +28,8 @@ namespace ariel
 
         // Check if the graph is directed
         bool getIsDirected() const;
+
+        bool NegativeEdges;
 
     private:
         // Count the number of edges in the graph
