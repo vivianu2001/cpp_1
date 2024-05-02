@@ -5,20 +5,19 @@ VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all --error-exitcode=99
 SOURCES=Graph.cpp Algorithms.cpp Demo.cpp Test.cpp TestCounter.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
-all: demo test_counter
 
+run: demo
+		./demo
 demo: Demo.o Graph.o Algorithms.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-test_counter: TestCounter.o Graph.o Algorithms.o Test.o
+test: TestCounter.o Graph.o Algorithms.o Test.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 	./$@
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-run: demo
-	./demo
 
 valgrind: demo test_counter
 	valgrind $(VALGRIND_FLAGS) ./demo
