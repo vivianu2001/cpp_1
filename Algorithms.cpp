@@ -6,38 +6,6 @@
 
 namespace ariel
 {
-    bool Algorithms::bfs(const std::vector<std::vector<int>> &matrix, int start)
-    {
-        int n = matrix.size();
-        std::vector<bool> visited(n, false);
-        std::queue<int> q;
-        q.push(start);
-        visited[start] = true;
-
-        while (!q.empty())
-        {
-            int node = q.front();
-            q.pop();
-
-            for (int i = 0; i < n; ++i)
-            {
-                if (matrix[node][i] && !visited[i])
-                {
-                    visited[i] = true;
-                    q.push(i);
-                }
-            }
-        }
-
-        // Check if all nodes were visited
-        for (bool v : visited)
-        {
-            if (!v)
-                return false;
-        }
-
-        return true;
-    }
 
     bool Algorithms::isConnected(const Graph &g)
     {
@@ -107,6 +75,38 @@ namespace ariel
             }
         }
     }
+    bool Algorithms::bfs(const std::vector<std::vector<int>> &matrix, int start)
+    {
+        int n = matrix.size();
+        std::vector<bool> visited(n, false);
+        std::queue<int> q;
+        q.push(start);
+        visited[start] = true;
+
+        while (!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+
+            for (int i = 0; i < n; ++i)
+            {
+                if (matrix[node][i] && !visited[i])
+                {
+                    visited[i] = true;
+                    q.push(i);
+                }
+            }
+        }
+
+        // Check if all nodes were visited
+        for (bool v : visited)
+        {
+            if (!v)
+                return false;
+        }
+
+        return true;
+    }
 
     bool Algorithms::isCycleUtil(const std::vector<std::vector<int>> &matrix, int v, std::vector<bool> &visited, std::vector<int> &cyclePath, std::vector<bool> &recStack, int parent)
     {
@@ -150,47 +150,11 @@ namespace ariel
             {
                 if (isCycleUtil(matrix, i, visited, cyclePath, recStack, -1)) // Pass -1 as the parent for the root
                 {
-                    std::string result = "The cycle is: ";
-                    for (int node : cyclePath)
-                    {
-                        result += std::to_string(node) + "->";
-                    }
-                    result += std::to_string(cyclePath.front()); // Add the start node to complete the cycle
-                    return result;
+                    return "The cycle is: " + constructPath(cyclePath) + "->" + std::to_string(cyclePath.front());
                 }
             }
         }
         return "No cycle found.";
-    }
-
-    bool Algorithms::checkBipartite(const std::vector<std::vector<int>> &matrix, std::vector<int> &color, int start)
-    {
-        std::queue<int> q;
-        q.push(start);
-        color[start] = 0;
-
-        while (!q.empty())
-        {
-            int u = q.front();
-            q.pop();
-
-            for (int v = 0; v < matrix.size(); ++v)
-            {
-                if (matrix[u][v] != 0)
-                { // There is an edge
-                    if (color[v] == -1)
-                    {                            // If not colored
-                        color[v] = 1 - color[u]; // Color with opposite color
-                        q.push(v);
-                    }
-                    else if (color[v] == color[u])
-                    {                 // If same color as parent
-                        return false; // Not bipartite
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     std::string Algorithms::buildBipartiteResult(const std::vector<int> &color)
@@ -242,6 +206,49 @@ namespace ariel
         return buildBipartiteResult(color);
     }
 
+    std::string Algorithms::constructPath(const std::vector<int> &path)
+    {
+        std::string pathStr;
+        for (size_t i = 0; i < path.size(); ++i)
+        {
+            pathStr += std::to_string(path[i]);
+            if (i < path.size() - 1)
+            {
+                pathStr += "->";
+            }
+        }
+        return pathStr;
+    }
+    bool Algorithms::checkBipartite(const std::vector<std::vector<int>> &matrix, std::vector<int> &color, int start)
+    {
+        std::queue<int> q;
+        q.push(start);
+        color[start] = 0;
+
+        while (!q.empty())
+        {
+            int u = q.front();
+            q.pop();
+
+            for (int v = 0; v < matrix.size(); ++v)
+            {
+                if (matrix[u][v] != 0)
+                { // There is an edge
+                    if (color[v] == -1)
+                    {                            // If not colored
+                        color[v] = 1 - color[u]; // Color with opposite color
+                        q.push(v);
+                    }
+                    else if (color[v] == color[u])
+                    {                 // If same color as parent
+                        return false; // Not bipartite
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     std::string Algorithms::negativeCycle(const Graph &g)
     {
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
@@ -267,12 +274,7 @@ namespace ariel
                         cycle.push_back(v);
                         std::reverse(cycle.begin(), cycle.end());
 
-                        std::string cycleStr = "Negative cycle found: ";
-                        for (size_t i = 0; i < cycle.size(); ++i)
-                        {
-                            cycleStr += std::to_string(cycle[i]) + (i < cycle.size() - 1 ? "->" : "");
-                        }
-                        return cycleStr;
+                        return "Negative cycle found: " + constructPath(cycle);
                     }
                 }
             }
@@ -280,6 +282,7 @@ namespace ariel
 
         return "No negative cycle found";
     }
+
     std::string Algorithms::shortestPath(const Graph &g, int start, int end)
     {
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
@@ -307,17 +310,7 @@ namespace ariel
             }
             std::reverse(path.begin(), path.end());
 
-            // Convert the path to a string
-            std::string pathStr;
-            for (size_t i = 0; i < path.size(); ++i)
-            {
-                pathStr += std::to_string(path[i]);
-                if (i < path.size() - 1)
-                {
-                    pathStr += "->";
-                }
-            }
-            return pathStr;
+            return constructPath(path);
         }
         else
         {
@@ -341,17 +334,7 @@ namespace ariel
                 }
                 std::reverse(path.begin(), path.end());
 
-                // Convert the path to a string
-                std::string pathStr;
-                for (size_t i = 0; i < path.size(); ++i)
-                {
-                    pathStr += std::to_string(path[i]);
-                    if (i < path.size() - 1)
-                    {
-                        pathStr += "->";
-                    }
-                }
-                return pathStr;
+                return constructPath(path);
             }
         }
     }

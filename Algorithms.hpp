@@ -25,6 +25,7 @@ namespace ariel
         static std::string buildBipartiteResult(const std::vector<int> &color);
         static bool bellmanFord(const std::vector<std::vector<int>> &matrix, int source, std::vector<int> &dist, std::vector<int> &prev);
         static std::vector<int> dijkstra(const std::vector<std::vector<int>> &matrix, int start);
+        static std::string constructPath(const std::vector<int> &path);
     };
 }
 
