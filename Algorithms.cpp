@@ -288,6 +288,12 @@ namespace ariel
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
         int n = matrix.size();
 
+        // Check if start and end vertices are valid
+        if (start < 0 || start >= n || end < 0 || end >= n)
+        {
+            return "Invalid start or end vertex."; // Return an error message for invalid vertices
+        }
+
         if (g.NegativeEdges)
         {
             // Use Bellman-Ford algorithm for graphs with negative edges

@@ -148,17 +148,6 @@ TEST_CASE("13-Graph with Self Loops")
     CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 0->0");
 }
 
-// TEST_CASE("14-Graph with All Negative Weights")  //to many cycles
-// {
-//     ariel::Graph g;
-//     std::vector<std::vector<int>> graph = {
-//         {0, -1, -1},
-//         {-1, 0, -1},
-//         {-1, -1, 0}};
-//     g.loadGraph(graph, true);
-//     CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 2->1->2");
-// }
-
 TEST_CASE("15-Complete Graph")
 {
     ariel::Graph g;
@@ -289,4 +278,95 @@ TEST_CASE("26-Shortest Path with Negative Weights") // SHOW TEST!
     CHECK(ariel::Algorithms::isConnected(g) == false);
     // The shortest path should be "0->1->3"
     CHECK(ariel::Algorithms::shortestPath(g, 0, 3) == "0->1->3");
+}
+
+// g.printGraph();                                    // Should print: "Graph with 6 vertices and 8 edges."
+
+TEST_CASE("27-Undirected, ") // SHOW TEST
+{
+    // Create a graph with negative weights
+    ariel::Graph g;
+    std::vector<std::vector<int>> graph26 = {
+        {0, 4, 0, 0, 0, 0, 0, 8, 0},
+        {4, 0, 8, 0, 0, 0, 0, 11, 0},
+        {0, 8, 0, 7, 0, 4, 0, 0, 2},
+        {0, 0, 7, 0, 9, 14, 0, 0, 0},
+        {0, 0, 0, 9, 0, 10, 0, 0, 0},
+        {0, 0, 4, 14, 10, 0, 2, 0, 0},
+        {0, 0, 0, 0, 0, 2, 0, 1, 6},
+        {8, 11, 0, 0, 0, 0, 1, 0, 7},
+        {0, 0, 2, 0, 0, 0, 6, 7, 0},
+    };
+
+    // Load the graph and check for connectivity
+    g.loadGraph(graph26, false);
+    CHECK(ariel::Algorithms::isConnected(g) == true);
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 2->3->4->5->2");
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 8) == "0->1->2->8");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
+}
+TEST_CASE("28-Bipartite, ") // SHOW TEST
+{
+    // Create a graph with negative weights
+    ariel::Graph g;
+    std::vector<std::vector<int>> graph28 = {
+        {0, 1, 0, 0, 0, 0, 0, 0},
+        {1, 0, 1, 0, 0, 0, 0, 0},
+        {0, 1, 0, 1, 0, 0, 0, 1},
+        {0, 0, 1, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0, 1, 0, 0},
+        {0, 0, 0, 0, 1, 0, 1, 0},
+        {0, 0, 0, 0, 0, 1, 0, 1},
+        {0, 0, 1, 0, 0, 0, 1, 0},
+    };
+
+    // Load the graph and check for connectivity
+    g.loadGraph(graph28, false);
+    CHECK(ariel::Algorithms::isConnected(g) == true);
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 2->3->4->5->6->7->2");
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 4) == "0->1->2->3->4");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2, 4, 6}, B={1, 3, 5, 7}");
+}
+TEST_CASE("29-Bipartite, ") // SHOW TEST
+{
+    // Create a graph with negative weights
+    ariel::Graph g;
+    std::vector<std::vector<int>> graph28 = {
+        {0, 1, 0, 0, 0, 0},
+        {1, 0, 1, 0, 0, 1},
+        {0, 1, 0, 1, 0, 0},
+        {0, 0, 1, 0, 1, 0},
+        {0, 0, 0, 1, 0, 1},
+        {0, 1, 0, 0, 1, 0},
+
+    };
+
+    // Load the graph and check for connectivity
+    g.loadGraph(graph28, false);
+    CHECK(ariel::Algorithms::isConnected(g) == true);
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 1->2->3->4->5->1");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
+}
+
+TEST_CASE("30-Bipartite, ") // SHOW TEST
+{
+    // Create a graph with negative weights
+    ariel::Graph g;
+    std::vector<std::vector<int>> graph30 = {
+        {0, 6, 4, 5, 0, 0},
+        {0, 0, 0, 0, -1, 0},
+        {0, -2, 0, 0, 3, 0},
+        {0, 0, -2, 0, 0, -1},
+        {0, 0, 0, 0, 0, 3},
+        {0, 0, 0, 0, 0, 0},
+
+    };
+
+    // Load the graph and check for connectivity
+    g.loadGraph(graph30, true);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "No cycle found.");
+    CHECK(ariel::Algorithms::negativeCycle(g) == "No negative cycle found");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 5) == "0->3->2->1->4->5");
 }
