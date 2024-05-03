@@ -328,3 +328,21 @@ TEST_CASE("26-Disconnected Graph")
     g.loadGraph(graph, true);
     CHECK(ariel::Algorithms::isConnected(g) == false);
 }
+
+TEST_CASE("26-Disconnected Graph")
+{
+    ariel::Graph g;
+    std::vector<std::vector<int>> graph = {
+        {0, 3, 2, 8, 0},
+        {3, 5, 0, 7, 0},
+        {2, 0, 0, 4, 9},
+        {8, 7, 4, 0, 6},
+        {0, 0, 9, 6, 0},
+    };
+    g.loadGraph(graph, true);
+    CHECK(ariel::Algorithms::isConnected(g) == true);
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 1->1");
+    CHECK(ariel::Algorithms::negativeCycle(g) == "No negative cycle found");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 3) == "0->2->3");
+}
