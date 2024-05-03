@@ -11,6 +11,11 @@ namespace ariel
     {
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
         int n = matrix.size();
+        if (n == 0)
+        {
+
+            return true;
+        }
 
         if (g.getIsDirected())
         {
@@ -140,6 +145,11 @@ namespace ariel
     {
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
         int n = matrix.size();
+        if (n == 0)
+        {
+            // Handle empty graph
+            return "No negative cycle found";
+        }
         std::vector<bool> visited(n, false);
         std::vector<int> cyclePath;
         std::vector<bool> recStack(n, false);
@@ -159,6 +169,7 @@ namespace ariel
 
     std::string Algorithms::buildBipartiteResult(const std::vector<int> &color)
     {
+
         std::vector<int> A, B;
         for (int i = 0; i < color.size(); ++i)
         {
@@ -191,6 +202,11 @@ namespace ariel
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
         int n = matrix.size();
         std::vector<int> color(n, -1);
+        if (n == 0)
+        {
+            // Handle empty graph
+            return "The graph is not bipartite";
+        }
 
         for (int i = 0; i < n; ++i)
         {
@@ -254,6 +270,11 @@ namespace ariel
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
         int n = matrix.size();
         std::vector<int> dist, prev;
+        if (n == 0)
+        {
+            // Handle empty graph
+            return "No negative cycle found";
+        }
 
         if (!bellmanFord(matrix, 0, dist, prev))
         {
@@ -287,11 +308,24 @@ namespace ariel
     {
         const std::vector<std::vector<int>> &matrix = g.getAdjacencyMatrix();
         int n = matrix.size();
+        if (n == 0)
+        {
+            // Handle empty graph
+            return "No shortest path in empty graph";
+        }
 
         // Check if start and end vertices are valid
         if (start < 0 || start >= n || end < 0 || end >= n)
         {
             return "Invalid start or end vertex."; // Return an error message for invalid vertices
+        }
+
+        // Check for negative cycles using the existing negativeCycle function
+        std::string negativeCycleResult = negativeCycle(g);
+        if (negativeCycleResult.find("Negative cycle found") != std::string::npos)
+        {
+            // If a negative cycle is found, shortest path cannot be determined
+            return "Negative cycle detected, shortest path not defined.";
         }
 
         if (g.NegativeEdges)
@@ -345,6 +379,46 @@ namespace ariel
         }
     }
 
+    bool Algorithms::bellmanFord(const std::vector<std::vector<int>> &matrix, int source, std::vector<int> &dist, std::vector<int> &prev)
+    {
+        int n = matrix.size();
+        dist.assign(n, std::numeric_limits<int>::max());
+        prev.assign(n, -1);
+
+        dist[source] = 0; // Initialize the source vertex distance to zero
+
+        // Relax all edges |V-1| times
+        for (int i = 0; i < n - 1; ++i)
+        {
+            for (int u = 0; u < n; ++u)
+            {
+                for (int v = 0; v < n; ++v)
+                {
+                    if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
+                    {
+                        dist[v] = dist[u] + matrix[u][v];
+                        prev[v] = u;
+                    }
+                }
+            }
+        }
+
+        // Check for negative weight cycles
+        for (int u = 0; u < n; ++u)
+        {
+            for (int v = 0; v < n; ++v)
+            {
+                if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
+                {
+                    // Negative cycle detected
+                    return false;
+                }
+            }
+        }
+
+        return true; // No negative cycles found
+    }
+
     std::vector<int> Algorithms::dijkstra(const std::vector<std::vector<int>> &matrix, int start)
     {
         int n = matrix.size();
@@ -380,44 +454,5 @@ namespace ariel
         }
 
         return prev; // Return the vector of predecessors
-    }
-
-    bool Algorithms::bellmanFord(const std::vector<std::vector<int>> &matrix, int source, std::vector<int> &dist, std::vector<int> &prev)
-    {
-        int n = matrix.size();
-        dist.assign(n, std::numeric_limits<int>::max());
-        prev.assign(n, -1);
-
-        dist[source] = 0; // Initialize the source vertex distance to zero
-
-        // Relax all edges |V-1| times
-        for (int i = 0; i < n - 1; ++i)
-        {
-            for (int u = 0; u < n; ++u)
-            {
-                for (int v = 0; v < n; ++v)
-                {
-                    if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
-                    {
-                        dist[v] = dist[u] + matrix[u][v];
-                        prev[v] = u;
-                    }
-                }
-            }
-        }
-
-        // Check for negative weight cycles
-        for (int u = 0; u < n; ++u)
-        {
-            for (int v = 0; v < n; ++v)
-            {
-                if (matrix[u][v] != 0 && dist[u] != std::numeric_limits<int>::max() && dist[u] + matrix[u][v] < dist[v])
-                {
-                    return false; // Negative cycle detected
-                }
-            }
-        }
-
-        return true; // No negative cycles found
     }
 } // namespace ariel
