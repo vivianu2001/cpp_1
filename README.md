@@ -63,16 +63,6 @@ To use this project, follow these steps:
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
 3. Build the project using the provided Makefile and it will run for you the tests:
-   ```bash
-   make all
-   ```
-4. Run the demo program:
-   ```bash
-   ./demo
-   ```
-5. Optionally, you can run the tests:
-   ```bash
-   ./test_counter
-   ```
+   
 
 That's it! You should now be able to run the demo program and the tests for this project.
