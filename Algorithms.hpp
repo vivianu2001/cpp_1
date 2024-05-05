@@ -1,3 +1,7 @@
+/*
+ID : 322880857
+GMAIL : Umanskyvivian@gmail.com
+*/
 #ifndef ALGORITHMS_HPP
 #define ALGORITHMS_HPP
 
