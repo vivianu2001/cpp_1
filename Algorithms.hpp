@@ -14,7 +14,7 @@ namespace ariel
     {
     public:
         static bool isConnected(const Graph &Graph);
-        static bool isStronglyConnected(const Graph &Graph); // Add this declaration
+        static bool isStronglyConnected(const Graph &Graph);
         static std::string shortestPath(const Graph &Graph, int start, int end);
 
         static std::string isContainsCycle(const Graph &Graph);
@@ -32,6 +32,7 @@ namespace ariel
         static std::vector<int> dijkstra(const std::vector<std::vector<int>> &matrix, int start);
         static std::string constructPath(const std::vector<int> &path);
         static std::string constructPathFromPrev(const std::vector<int> &prev, int end, size_t start);
+        static std::vector<std::vector<int>> createUndirectedMatrix(const std::vector<std::vector<int>> &directedMatrix);
     };
 }
 

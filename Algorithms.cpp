@@ -11,6 +11,19 @@ GMAIL : Umanskyvivian@gmail.com
 #include <sstream>
 namespace ariel
 {
+    std::string Algorithms::constructPath(const std::vector<int> &path)
+    {
+        std::string pathStr;
+        for (size_t i = 0; i < path.size(); ++i)
+        {
+            pathStr += std::to_string(path[i]);
+            if (i < path.size() - 1)
+            {
+                pathStr += "->";
+            }
+        }
+        return pathStr;
+    }
 
     bool Algorithms::isConnected(const Graph &graph)
     {
@@ -64,7 +77,7 @@ namespace ariel
         // Perform DFS from each vertex to check for strong connectivity
         for (size_t i = 0; i < n; ++i)
         {
-            std::vector<bool> visited(n, false);
+            std::vector<bool> visited(n, false); // vector of nodes for visited
 
             dfs(matrix, visited, i);
 
@@ -78,19 +91,6 @@ namespace ariel
             }
         }
         return true; // Return true if all vertices are strongly connected
-    }
-    std::string Algorithms::constructPath(const std::vector<int> &path)
-    {
-        std::string pathStr;
-        for (size_t i = 0; i < path.size(); ++i)
-        {
-            pathStr += std::to_string(path[i]);
-            if (i < path.size() - 1)
-            {
-                pathStr += "->";
-            }
-        }
-        return pathStr;
     }
 
     void Algorithms::dfs(const std::vector<std::vector<int>> &matrix, std::vector<bool> &visited, size_t node)
@@ -139,36 +139,46 @@ namespace ariel
         return true;
     }
 
-    bool Algorithms::isCycleUtil(const std::vector<std::vector<int>> &matrix, size_t v, std::vector<bool> &visited, std::vector<int> &cyclePath, std::vector<bool> &recStack, size_t parent)
-    {
-        visited[v] = true;
-        recStack[v] = true;
-        cyclePath.push_back(static_cast<int>(v));
+ bool Algorithms::isCycleUtil(const std::vector<std::vector<int>> &matrix, size_t v, std::vector<bool> &visited, std::vector<int> &cyclePath, std::vector<bool> &recStack, size_t parent)
+{
+    // Mark the current vertex as visited and part of the recursion stack
+    visited[v] = true;
+    recStack[v] = true;
+    cyclePath.push_back(static_cast<int>(v)); // Add the current vertex to the cycle path
 
-        for (size_t i = 0; i < matrix.size(); ++i)
+    // Iterate over all adjacent vertices of the current vertex
+    for (size_t i = 0; i < matrix.size(); ++i)
+    {
+        // If there is an edge from the current vertex to vertex i
+        if (matrix[v][i] != 0)
         {
-            if (matrix[v][i] != 0)
+            // If vertex i has not been visited, recursively call isCycleUtil
+            if (!visited[i])
             {
-                if (!visited[i])
+                if (isCycleUtil(matrix, i, visited, cyclePath, recStack, v))
                 {
-                    if (isCycleUtil(matrix, i, visited, cyclePath, recStack, v))
-                    {
-                        return true;
-                    }
-                }
-                else if (recStack[i] && i != parent && parent != std::numeric_limits<size_t>::max())
-                {
-                    auto startIt = std::find(cyclePath.begin(), cyclePath.end(), static_cast<int>(i));
-                    cyclePath.erase(cyclePath.begin(), startIt);
-                    return true;
+                    return true; // If a cycle is detected, return true
                 }
             }
+            // If vertex i is in the recursion stack and not the parent vertex
+            else if (recStack[i] && i != parent && parent != std::numeric_limits<size_t>::max())
+            {
+                // Find the position of vertex i in the cycle path
+                auto startIt = std::find(cyclePath.begin(), cyclePath.end(), static_cast<int>(i));
+                // Erase all vertices in the cycle path before vertex i
+                cyclePath.erase(cyclePath.begin(), startIt);
+                return true; // Return true indicating a cycle is found
+            }
         }
-
-        recStack[v] = false;
-        cyclePath.pop_back();
-        return false;
     }
+
+    // Backtrack: Mark the current vertex as not part of the recursion stack
+    recStack[v] = false;
+    // Remove the current vertex from the cycle path
+    cyclePath.pop_back();
+    return false; // No cycle found, return false
+}
+
 
     std::string Algorithms::isContainsCycle(const Graph &graph)
     {
@@ -227,33 +237,58 @@ namespace ariel
         result << "}";
         return result.str();
     }
+    std::vector<std::vector<int>> Algorithms:: createUndirectedMatrix(const std::vector<std::vector<int>>& directedMatrix) {
+    size_t n = directedMatrix.size();
+    std::vector<std::vector<int>> undirectedMatrix(n, std::vector<int>(n, 0));
 
-    std::string Algorithms::isBipartite(const Graph &graph)
-    {
-        const std::vector<std::vector<int>> &matrix = graph.getAdjacencyMatrix();
-        size_t n = matrix.size();
-        std::vector<int> color(n, -1); // Initializing colors to -1 to indicate unvisited nodes
-
-        if (n == 0)
-        {
-            // Directly handle the empty graph case
-            return "The graph is not bipartite.";
+    for (size_t u = 0; u < n; ++u) {
+        for (size_t v = 0; v < n; ++v) {
+            if (directedMatrix[u][v] != 0) {
+                undirectedMatrix[v][u] = directedMatrix[u][v];  // Ensure the edge is bidirectional
+            }
+                        if (directedMatrix[v][u] != 0) {
+                undirectedMatrix[u][v] = directedMatrix[v][u];  // Ensure the edge is bidirectional
+            }
+            
         }
+    }
+    return undirectedMatrix;
+}
 
-        // Check each component of the graph
-        for (size_t i = 0; i < n; ++i)
+
+   std::string Algorithms::isBipartite(const Graph &graph)
+{
+    const std::vector<std::vector<int>>& originalMatrix = graph.getAdjacencyMatrix();
+    size_t n = originalMatrix.size();
+    std::vector<int> color(n, -1);  // Initializing colors to -1 to indicate unvisited nodes
+
+    if (n == 0)
+    {
+        return "The graph is not bipartite.";  // Directly handle the empty graph case
+    }
+
+    const std::vector<std::vector<int>> matrixToUse = originalMatrix;
+
+    if (graph.getIsDirected())
+    {
+        std::vector<std::vector<int>> tempMatrix = createUndirectedMatrix(originalMatrix);
+        matrixToUse ==tempMatrix;  // Use the temporary undirected matrix for bipartite checking
+    }
+
+    // Check each component of the graph
+    for (size_t i = 0; i < n; ++i)
+    {
+        if (color[i] == -1)  // If this component isn't colored yet
         {
-            if (color[i] == -1) // If this component isn't colored yet
+            if (!checkBipartite(matrixToUse, color, i))
             {
-                if (!checkBipartite(matrix, color, i))
-                {
-                    return "The graph is not bipartite.";
-                }
+                return "The graph is not bipartite.";
             }
         }
-
-        return buildBipartiteResult(color);
     }
+
+    return buildBipartiteResult(color);  // Assuming this function builds the result string based on colors
+}
 
     bool Algorithms::checkBipartite(const std::vector<std::vector<int>> &matrix, std::vector<int> &color, size_t start)
     {
