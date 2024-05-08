@@ -19,7 +19,7 @@ namespace ariel
 
     public:
         // Constructor to initialize a directed or undirected graph
-        Graph(bool directed = false);
+        Graph();
 
         // Load the adjacency matrix into the graph, with checks for proper structure
         void loadGraph(const std::vector<std::vector<int>> &matrix, bool directed);

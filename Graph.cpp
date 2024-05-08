@@ -8,7 +8,7 @@ GMAIL : Umanskyvivian@gmail.com
 namespace ariel
 {
     // Constructor implementation
-    Graph::Graph(bool directed) : isDirected(directed) {}
+    Graph::Graph() {}
 
     // Load graph from a given adjacency matrix
     void Graph::loadGraph(const std::vector<std::vector<int>> &matrix, bool directed)
@@ -85,13 +85,19 @@ namespace ariel
                 {
                     edges++;
                 }
-                if (adjacencyMatrix[i][j] != 0)
+                else
                 {
-                    edges++;
+                    if(adjacencyMatrix[i][j] != 0)
+                    {
+                        edges++;
+                    }
                 }
             }
+                    
+                
+            
         }
-        return (isDirected ? edges : edges / 2); // Divide by 2 for undirected graphs
+        return (edges); // Divide by 2 for undirected graphs
     }
 
     // Accessor for the adjacency matrix
