@@ -340,8 +340,7 @@ namespace ariel
             return "Invalid start or end vertex."; // Return an error message for invalid vertices
         }
 
-    
-        size_t s = static_cast<size_t>(start); 
+        size_t s = static_cast<size_t>(start);
 
         // Check for negative cycles using the existing negativeCycle function
         std::string negativeCycleResult = negativeCycle(graph);
@@ -463,7 +462,7 @@ namespace ariel
             throw std::invalid_argument("Invalid start vertex"); // Ensuring start is within range
         }
 
-        size_t s = static_cast<size_t>(start); 
+        size_t s = static_cast<size_t>(start);
         dist[s] = 0;
         pq.push({0, static_cast<int>(s)});
 
@@ -473,7 +472,7 @@ namespace ariel
             int d = pq.top().first;
             pq.pop();
 
-            size_t su = static_cast<size_t>(u); 
+            size_t su = static_cast<size_t>(u);
             if (d > dist[su])
                 continue;
 

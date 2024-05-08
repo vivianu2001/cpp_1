@@ -87,15 +87,12 @@ namespace ariel
                 }
                 else
                 {
-                    if(adjacencyMatrix[i][j] != 0)
+                    if (adjacencyMatrix[i][j] != 0)
                     {
                         edges++;
                     }
                 }
             }
-                    
-                
-            
         }
         return (edges); // Divide by 2 for undirected graphs
     }
