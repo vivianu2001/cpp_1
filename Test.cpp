@@ -6,7 +6,7 @@ GMAIL : Umanskyvivian@gmail.com
 #include "Algorithms.hpp"
 #include "Graph.hpp"
 
-TEST_CASE("1-Unweighted Directed Graph")
+TEST_CASE("1-Unweighted Directed Graph") // triangle
 {
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {
@@ -19,7 +19,7 @@ TEST_CASE("1-Unweighted Directed Graph")
     CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
 }
 
-TEST_CASE("2-Unweighted Undirected Graph")
+TEST_CASE("2-Unweighted Undirected Graph") //>
 {
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {
@@ -52,6 +52,8 @@ TEST_CASE("4-Graph with no edges")
     g.loadGraph(graph, true);
     CHECK(ariel::Algorithms::isConnected(g) == false);
     CHECK(ariel::Algorithms::negativeCycle(g) == "No negative cycle found");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 1, 2}, B={}");
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 1) == "No shortest path in empty graph");
 }
 
 TEST_CASE("5-Graph with negative cycle")
@@ -76,8 +78,10 @@ TEST_CASE("6-Graph with multiple edges and one negative cycle")
         {-2, 0, 1},
         {1, -2, 0}};
     g.loadGraph(graph, true);
+    CHECK(ariel::Algorithms::isConnected(g) == true);
     CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 2->1->0->2");
     CHECK(ariel::Algorithms::shortestPath(g, 0, 1) == "Negative cycle detected, shortest path not defined.");
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 0->1->2->0");
 }
 TEST_CASE("7-Sparse Graph with No Cycles")
 {
@@ -87,7 +91,9 @@ TEST_CASE("7-Sparse Graph with No Cycles")
         {0, 0, 0},
         {0, 0, 0}};
     g.loadGraph(graph, true);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
     CHECK(ariel::Algorithms::isContainsCycle(g) == "No cycle found.");
+    CHECK(ariel::Algorithms::shortestPath(g, 2, 0) == "No path available");
 }
 
 TEST_CASE("8-Dense Directed Graph")
@@ -98,6 +104,7 @@ TEST_CASE("8-Dense Directed Graph")
         {1, 0, 1},
         {1, 1, 0}};
     g.loadGraph(graph, true);
+    CHECK(ariel::Algorithms::isConnected(g) == true);
     CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 0->1->2->0");
 }
 
@@ -110,40 +117,35 @@ TEST_CASE("9-Disconnected Undirected Graph")
         {0, 0, 0}};
     g.loadGraph(graph, false);
     CHECK(ariel::Algorithms::isConnected(g) == false);
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "No cycle found.");
+    CHECK(ariel::Algorithms::negativeCycle(g) == "No negative cycle found");
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 1) == "No shortest path in empty graph");
 }
 
-// TEST_CASE("10-Graph with Self Loops")
-// {
-//     ariel::Graph g;
-//     std::vector<std::vector<int>> graph = {
-//         {1, 0, 0},
-//         {0, 1, 0},
-//         {0, 0, 1}};
-//     g.loadGraph(graph, true);
-//     CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 0->0");
-// }
-
-TEST_CASE("11-Complete Graph")
+TEST_CASE("11-Graph with no edge from 1 to 2")
 {
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {
         {0, 1, 1},
-        {1, 0, 1},
+        {1, 0, 0},
         {1, 1, 0}};
     g.loadGraph(graph, true);
     CHECK(ariel::Algorithms::isConnected(g) == true);
+    CHECK(ariel::Algorithms::shortestPath(g, 1, 2) == "1->0->2");
 }
 
-TEST_CASE("12-Bipartite Test with Even Cycle")
+TEST_CASE("12- Disconnected Bipartite Test with Even Cycle ") // square
 {
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {
         {0, 1, 0, 1},
-        {1, 0, 1, 0},
-        {0, 1, 0, 1},
-        {1, 0, 1, 0}};
+        {1, 0, 0, 0},
+        {0, 0, 0, 0},
+        {1, 0, 0, 0}};
     g.loadGraph(graph, true);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
     CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2}, B={1, 3}");
+    CHECK(ariel::Algorithms::shortestPath(g, 2, 0) == "No path available");
 }
 
 TEST_CASE("13-Non-Bipartite Test with Odd Cycle")
@@ -157,26 +159,16 @@ TEST_CASE("13-Non-Bipartite Test with Odd Cycle")
     CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
 }
 
-TEST_CASE("14-Graph with Multiple Disconnected Components")
-{
-    ariel::Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 2, 0},
-        {2, 0, 0},
-        {0, 0, 0}};
-    g.loadGraph(graph, false);
-    CHECK(ariel::Algorithms::isConnected(g) == false);
-}
-
 TEST_CASE("15-Graph with Loop and Negative Cycle")
 {
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {
         {0, 1, 0},
-        {-1, 0, 0},
+        {-2, 0, 0},
         {0, 0, 0}};
     g.loadGraph(graph, true);
-    CHECK(ariel::Algorithms::negativeCycle(g) == "No negative cycle found");
+    CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 1->0->1");
+    CHECK(ariel::Algorithms::isConnected(g) == false);
 }
 
 TEST_CASE("16-Graph with Highly Negative Edges")
@@ -185,9 +177,12 @@ TEST_CASE("16-Graph with Highly Negative Edges")
     std::vector<std::vector<int>> graph = {
         {0, -100, 0},
         {0, 0, -100},
-        {-100, 0, 0}};
+        {0, -100, 0}};
     g.loadGraph(graph, true);
-    CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 1->2->0->1");
+    CHECK(ariel::Algorithms::isConnected(g) == false);
+    CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 2->1->2");
+    CHECK(ariel::Algorithms::shortestPath(g, 2, 0) == "Negative cycle detected, shortest path not defined.");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2}, B={1}");
 }
 
 TEST_CASE("17-Empty Graph")
@@ -196,6 +191,9 @@ TEST_CASE("17-Empty Graph")
     std::vector<std::vector<int>> graph = {}; // Empty graph
     g.loadGraph(graph, true);
     CHECK(ariel::Algorithms::isConnected(g) == true);
+    CHECK(ariel::Algorithms::negativeCycle(g) == "No negative cycle found");
+    CHECK(ariel::Algorithms::shortestPath(g, 2, 0) == "No shortest path in empty graph");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
 }
 
 TEST_CASE("18-Single Node Graph")
@@ -205,6 +203,8 @@ TEST_CASE("18-Single Node Graph")
     g.loadGraph(graph, true);
     CHECK(ariel::Algorithms::isConnected(g) == true);
     CHECK(ariel::Algorithms::isContainsCycle(g) == "No cycle found.");
+    CHECK(ariel::Algorithms::shortestPath(g, 2, 0) == "No shortest path in empty graph");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
 }
 
 TEST_CASE("19-Two Nodes with Negative Edge")
@@ -215,8 +215,9 @@ TEST_CASE("19-Two Nodes with Negative Edge")
         {-1, 0}};
     g.loadGraph(graph, true);
     CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 1->0->1");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0}, B={1}");
 }
-TEST_CASE("20-Shortest Path with Negative Weights") // SHOW TEST!
+TEST_CASE("20-Shortest Path with Negative Weights")
 {
     // Create a graph with negative weights
     ariel::Graph g;
@@ -226,16 +227,14 @@ TEST_CASE("20-Shortest Path with Negative Weights") // SHOW TEST!
         {0, 0, 0, 1},
         {0, 0, 0, 0}};
 
-    // Load the graph and check for connectivity
     g.loadGraph(graph26, true);
     CHECK(ariel::Algorithms::isConnected(g) == false);
-    // The shortest path should be "0->1->3"
     CHECK(ariel::Algorithms::shortestPath(g, 0, 3) == "0->1->3");
 }
 
 TEST_CASE("21-Undirected, ") // SHOW TEST
 {
-    // Create a graph with negative weights
+
     ariel::Graph g;
     std::vector<std::vector<int>> graph26 = {
         {0, 4, 0, 0, 0, 0, 0, 8, 0},
@@ -254,6 +253,7 @@ TEST_CASE("21-Undirected, ") // SHOW TEST
     CHECK(ariel::Algorithms::isConnected(g) == true);
     CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 2->3->4->5->2");
     CHECK(ariel::Algorithms::shortestPath(g, 0, 8) == "0->1->2->8");
+    CHECK(ariel::Algorithms::shortestPath(g, 3, 7) == "3->2->5->6->7");
     CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
 }
 TEST_CASE("22-Bipartite, ") // SHOW TEST
@@ -297,9 +297,10 @@ TEST_CASE("23-Bipartite, ") // SHOW TEST
     CHECK(ariel::Algorithms::isConnected(g) == true);
     CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 1->2->3->4->5->1");
     CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
+    CHECK(ariel::Algorithms::shortestPath(g, 3, 0) == "3->2->1->0");
 }
 
-TEST_CASE("24-Bipartite, ") // SHOW TEST
+TEST_CASE("24-Negative edges, ") // SHOW TEST
 {
     // Create a graph with negative weights
     ariel::Graph g;
@@ -313,7 +314,6 @@ TEST_CASE("24-Bipartite, ") // SHOW TEST
 
     };
 
-    // Load the graph and check for connectivity
     g.loadGraph(graph30, true);
     CHECK(ariel::Algorithms::isConnected(g) == false);
     CHECK(ariel::Algorithms::isContainsCycle(g) == "No cycle found.");
@@ -322,18 +322,7 @@ TEST_CASE("24-Bipartite, ") // SHOW TEST
     CHECK(ariel::Algorithms::shortestPath(g, 0, 5) == "0->3->2->1->4->5");
 }
 
-TEST_CASE("26-Disconnected Graph")
-{
-    ariel::Graph g;
-    std::vector<std::vector<int>> graph = {
-        {0, 1, 0},
-        {0, 0, 0},
-        {0, 0, 0}};
-    g.loadGraph(graph, true);
-    CHECK(ariel::Algorithms::isConnected(g) == false);
-}
-
-TEST_CASE("26-Disconnected Graph")
+TEST_CASE("26")
 {
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {
@@ -343,10 +332,29 @@ TEST_CASE("26-Disconnected Graph")
         {8, 7, 4, 0, 6},
         {0, 0, 9, 6, 0},
     };
-    g.loadGraph(graph, true);
+    g.loadGraph(graph, false);
     CHECK(ariel::Algorithms::isConnected(g) == true);
-    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 1->1");
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 0->1->3->0");
     CHECK(ariel::Algorithms::negativeCycle(g) == "No negative cycle found");
     CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
     CHECK(ariel::Algorithms::shortestPath(g, 0, 3) == "0->2->3");
+}
+TEST_CASE("27")
+{
+    ariel::Graph g;
+    std::vector<std::vector<int>> graph = {
+        {0, 0, 0, 0, 0, 0, 0},
+        {9, 0, 0, -6, 0, 1, 0},
+        {3, 0, 0, 0, 0, 0, 0},
+        {2, 0, 9, 0, 0, 2, 0},
+        {0, 0, 0, 0, 0, 0, 2},
+        {0, 0, 0, 0, 3, 0, 1},
+        {0, 2, 4, 0, 0, 0, 0},
+    };
+    g.loadGraph(graph, true);
+    CHECK(ariel::Algorithms::isConnected(g) == false);
+    CHECK(ariel::Algorithms::isContainsCycle(g) == "The cycle is: 1->3->5->4->6->1");
+    CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 3->5->6->1->3");
+    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
+    CHECK(ariel::Algorithms::shortestPath(g, 0, 3) == "Negative cycle detected, shortest path not defined.");
 }

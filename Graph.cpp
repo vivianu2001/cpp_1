@@ -16,13 +16,6 @@ namespace ariel
         // Load the graph from the given adjacency matrix
         isDirected = directed;
 
-        // Check if the matrix is empty
-        if (matrix.empty())
-        {
-            adjacencyMatrix.clear();
-            return;
-        }
-
         // Check if the matrix is square
         size_t size = matrix.size(); // number of rows
         for (const auto &row : matrix)
@@ -107,5 +100,9 @@ namespace ariel
     bool Graph::getIsDirected() const
     {
         return isDirected;
+    }
+    bool Graph::getIsNegativeEdges() const
+    {
+        return NegativeEdges;
     }
 } // namespace ariel

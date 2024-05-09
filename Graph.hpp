@@ -16,6 +16,7 @@ namespace ariel
     private:
         std::vector<std::vector<int>> adjacencyMatrix; // Store the adjacency matrix
         bool isDirected;
+        bool NegativeEdges;
 
     public:
         // Constructor to initialize a directed or undirected graph
@@ -32,10 +33,9 @@ namespace ariel
 
         // Check if the graph is directed
         bool getIsDirected() const;
+        bool getIsNegativeEdges() const;
 
-        bool NegativeEdges;
-
-    private:
+ 
         // Count the number of edges in the graph
         int countEdges() const;
     };
