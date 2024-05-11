@@ -12,6 +12,7 @@
 - **Graph.cpp**: Contains the implementation of the `Graph` class for graph representation.
 - **Algorithms.cpp**: Implements various graph algorithms including `isConnected`, `shortestPath`, `isContainsCycle`, `isBipartite`, and `negativeCycle`.
 - **Demo.cpp**: Provides examples demonstrating the usage of implemented classes and algorithms.
+- - **Test.cpp**: Contains a suite of automated tests using the `doctest` framework, verifying the correctness of the graph algorithms across a range of scenarios, from simple to complex graph structures.
 
 ## Graph Representation
 
@@ -51,12 +52,13 @@
 
 ## Code Division
 
-🧩 The code is divided into three main files:
+🧩 The code is divided into five main files:
 
 - **Graph.cpp**: Contains the implementation of the `Graph` class.
 - **Algorithms.cpp**: Contains implementations of various graph algorithms.
 - **Demo.cpp**: Provides examples demonstrating the usage of implemented classes and algorithms.
 - **Main.cpp**: Serves as the entry point for demonstrating and testing the graph functionalities integrated in the project.
+- - **Test.cpp**: Contains a suite of automated tests.
 
 
 ## Usage
