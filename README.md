@@ -56,7 +56,7 @@
 - **Graph.cpp**: Contains the implementation of the `Graph` class.
 - **Algorithms.cpp**: Contains implementations of various graph algorithms.
 - **Demo.cpp**: Provides examples demonstrating the usage of implemented classes and algorithms.
--**Main.cpp**: Serves as the entry point for demonstrating and testing the graph functionalities integrated in the project.
+- **Main.cpp**: Serves as the entry point for demonstrating and testing the graph functionalities integrated in the project.
 
 
 ## Usage
@@ -65,7 +65,7 @@ To use this project, follow these steps:
 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
-3. Build the project using the provided Makefile and it will run for you the tests:
+3. Build the project using the provided Makefile with make all and it will run for you the tests and demo 
    
 
 That's it! You should now be able to run the demo program and the tests for this project.
