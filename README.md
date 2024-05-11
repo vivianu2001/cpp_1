@@ -17,6 +17,7 @@
 ## Graph Representation
 
 🔍 Graphs are represented using an adjacency matrix, a square matrix where each cell indicates the presence or absence of an edge between two vertices. Diagonal elements represent self-loops, and non-diagonal elements represent edge connections.
+Graphs can bbe directed and non directed
 
 ## Implemented Algorithms
 
