@@ -22,11 +22,12 @@
 - **isConnected(g)**
   - **Implementation:** Utilizes BFS for undirected graphs and a series of DFS checks for directed graphs to ensure strong connectivity.
   - **Output:** Returns `true` if the graph is connected; otherwise, returns `false`.
-
 ### Shortest Path
 
 - **shortestPath(g, start, end)**
-  - **Implementation:** Uses Dijkstra's algorithm, leveraging a priority queue to manage the frontier vertices.
+  - **Implementation:** 
+    - **Dijkstra's Algorithm:** Utilized for graphs without negative weight edges, leveraging a priority queue to manage the frontier vertices efficiently.
+    - **Bellman-Ford Algorithm:** Applied when the graph contains negative weight edges, capable of handling negative weights and detecting negative cycles.
   - **Output:** Returns a string representing the path by listing vertices (e.g., "0->1->2") if a path exists; otherwise, returns "-1".
 
 ### Cycle Detection
@@ -55,6 +56,8 @@
 - **Graph.cpp**: Contains the implementation of the `Graph` class.
 - **Algorithms.cpp**: Contains implementations of various graph algorithms.
 - **Demo.cpp**: Provides examples demonstrating the usage of implemented classes and algorithms.
+-**Main.cpp**: Serves as the entry point for demonstrating and testing the graph functionalities integrated in the project.
+
 
 ## Usage
 

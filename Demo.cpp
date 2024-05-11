@@ -28,7 +28,7 @@ void runDemo()
     g.printGraph();                                    // Should print: "Graph with 3 vertices and 4 edges."
     cout << Algorithms::isConnected(g) << endl;        // Should print: "1" (true).
     cout << Algorithms::shortestPath(g, 0, 2) << endl; // Should print: 0->1->2.
-    cout << Algorithms::isContainsCycle(g) << endl;    // Should print: "0" (false).
+    cout << Algorithms::isContainsCycle(g) << endl;    // Should print: "No cycle found".
     cout << Algorithms::isBipartite(g) << endl;        // Should print: "The graph is bipartite: A={0, 2}, B={1}".
     cout << "\n";
     // 5x5 matrix that represents a non-connected graph with a cycle.
@@ -43,7 +43,7 @@ void runDemo()
     cout << "Graph 2:\n";
     g.printGraph();                                    // Should print: "Graph with 5 vertices and 4 edges."
     cout << Algorithms::isConnected(g) << endl;        // Should print: "0" (false).
-    cout << Algorithms::shortestPath(g, 0, 4) << endl; // Should print: "-1" (there is no path between 0 and 4).
+    cout << Algorithms::shortestPath(g, 0, 4) << endl; // Should print: "No path available" (there is no path between 0 and 4).
     cout << Algorithms::isContainsCycle(g) << endl;    // Should print: "The cycle is: 0->1->2->0".
     cout << Algorithms::isBipartite(g) << endl;        // Should print: "The graph is not bipartite."
     cout << "\n";
@@ -60,7 +60,7 @@ void runDemo()
     g.printGraph();                                    // Should print: "Graph with 5 vertices and 6 edges."
     cout << Algorithms::isConnected(g) << endl;        // Should print: "0" (false).
     cout << Algorithms::shortestPath(g, 0, 4) << endl; // Should print: 0->1->2->3->4.
-    cout << Algorithms::isContainsCycle(g) << endl;    // Should print: "0" (false).
+    cout << Algorithms::isContainsCycle(g) << endl;    // Should print: "No cycle found" (false).
     cout << Algorithms::isBipartite(g) << endl;        // Should print: "The graph is bipartite: A={0, 2, 4}, B={1, 3}".
     cout << "\n";
 
@@ -78,7 +78,7 @@ void runDemo()
     }
     catch (const std::invalid_argument &e)
     {
-        cout << e.what() << endl; // Should print: "Invalid graph: The graph is not a square matrix."
+        cout << e.what() << endl; // "The adjacency matrix must be square."
     }
     cout << "\n";
     vector<vector<int>> graph5 = {

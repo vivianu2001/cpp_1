@@ -485,13 +485,7 @@ namespace ariel
         prev.assign(n, -1);
         dist[static_cast<size_t>(source)] = 0;
 
-        std::cout << "Starting Bellman-Ford with source: " << source << std::endl;
-        std::cout << "Initial distances:" << std::endl;
-        for (size_t i = 0; i < n; i++)
-        {
-            std::cout << "dist[" << i << "] = " << (dist[i] == std::numeric_limits<int>::max() ? "Infinity" : std::to_string(dist[i])) << std::endl;
-        }
-
+     
         bool updated = false;
         // Relax all edges |V-1| times
         for (size_t i = 0; i < n - 1; ++i)
@@ -511,19 +505,17 @@ namespace ariel
                         dist[v] = dist[u] + matrix[u][v];
                         prev[v] = static_cast<int>(u);
                         updated = true;
-                        std::cout << "Relaxed edge from " << u << " to " << v << ", new dist[" << v << "] = " << dist[v] << std::endl;
+            
                     }
                 }
             }
             if (!updated)
             {
-                std::cout << "No updates in this iteration, stopping early." << std::endl;
                 break;
             }
         }
 
         // Check for negative weight cycles
-        std::cout << "Completed Bellman-Ford, checking for negative cycles." << std::endl;
         for (size_t u = 0; u < n; ++u)
         {
             if (dist[u] == std::numeric_limits<int>::max())
@@ -535,7 +527,7 @@ namespace ariel
             {
                 if (matrix[u][v] != 0 && dist[u] + matrix[u][v] < dist[v])
                 {
-                    std::cout << "Negative cycle detected involving edge from " << u << " to " << v << std::endl;
+    
                     return false;
                 }
             }
