@@ -23,7 +23,7 @@ void runDemo()
         {0, 1, 0},
         {1, 0, 1},
         {0, 1, 0}};
-    g.loadGraph(graph, true); // Load the graph to the object as directed.
+    g.loadGraph(graph, true); // Load the graph to the object as undirected.
     cout << "Graph 1:\n";
     g.printGraph();                                    // Should print: "Graph with 3 vertices and 4 edges."
     cout << Algorithms::isConnected(g) << endl;        // Should print: "1" (true).

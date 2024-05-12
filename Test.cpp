@@ -39,7 +39,7 @@ TEST_CASE("3-Test invalid size ")
         {0, 1, 2},
         {1, 0, 3},
     };
-    CHECK_THROWS(g.loadGraph(graph, true)); // Assuming loading invalid weights throws
+    CHECK_THROWS(g.loadGraph(graph, true));
 }
 
 TEST_CASE("4-Graph with no edges")
@@ -357,4 +357,14 @@ TEST_CASE("27")
     CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle found: 3->5->6->1->3");
     CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
     CHECK(ariel::Algorithms::shortestPath(g, 0, 3) == "Negative cycle detected, shortest path not defined.");
+}
+TEST_CASE("28")
+{
+    ariel::Graph g;
+    std::vector<std::vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {0, 3, 0},
+    };
+    CHECK_THROWS(g.loadGraph(graph, false));
 }
