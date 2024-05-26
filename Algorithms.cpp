@@ -34,7 +34,7 @@ namespace ariel
             // Consider an empty graph as connected.
             return true;
         }
-        if (graph.countEdges() == 0)
+        else if (graph.countEdges() == 0)
         {
             return false;
         }
@@ -485,7 +485,6 @@ namespace ariel
         prev.assign(n, -1);
         dist[static_cast<size_t>(source)] = 0;
 
-     
         bool updated = false;
         // Relax all edges |V-1| times
         for (size_t i = 0; i < n - 1; ++i)
@@ -505,7 +504,6 @@ namespace ariel
                         dist[v] = dist[u] + matrix[u][v];
                         prev[v] = static_cast<int>(u);
                         updated = true;
-            
                     }
                 }
             }
@@ -527,7 +525,7 @@ namespace ariel
             {
                 if (matrix[u][v] != 0 && dist[u] + matrix[u][v] < dist[v])
                 {
-    
+
                     return false;
                 }
             }
