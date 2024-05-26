@@ -35,8 +35,7 @@ namespace ariel
         bool getIsDirected() const;
         bool getIsNegativeEdges() const;
 
- 
-        // Count the number of edges in the graph
+         // Count the number of edges in the graph
         int countEdges() const;
     };
 

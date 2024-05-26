@@ -8,7 +8,10 @@ GMAIL : Umanskyvivian@gmail.com
 namespace ariel
 {
     // Constructor implementation
-    Graph::Graph() {}
+    Graph::Graph()
+        : isDirected(false), NegativeEdges(false)
+    {
+    }
 
     // Load graph from a given adjacency matrix
     void Graph::loadGraph(const std::vector<std::vector<int>> &matrix, bool directed)
