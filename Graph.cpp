@@ -16,47 +16,38 @@ namespace ariel
     // Load graph from a given adjacency matrix
     void Graph::loadGraph(const std::vector<std::vector<int>> &matrix, bool directed)
     {
-        // Load the graph from the given adjacency matrix
-        isDirected = directed;
-
-        // Check if the matrix is square
-        size_t size = matrix.size(); // number of rows
-        for (const auto &row : matrix)
+        if (matrix.empty())
         {
-            if (row.size() != size)
+            throw std::invalid_argument("The adjacency matrix is empty.");
+        }
+
+        size_t size = matrix.size();
+        for (size_t i = 0; i < size; ++i)
+        {
+            if (matrix[i].size() != size)
             {
                 throw std::invalid_argument("The adjacency matrix must be square.");
             }
-        }
 
-        // If the graph is undirected, check for symmetry
-        if (!isDirected)
-        {
-            for (size_t i = 0; i < size; i++)
+            for (size_t j = (directed ? 0 : i); j < size; ++j)
             {
-                for (size_t j = 0; j < i; j++)
-                { // Check only half as matrix should be symmetric
-                    if (matrix[i][j] != matrix[j][i])
-                    {
-                        throw std::invalid_argument("Matrix must be symmetric for undirected graphs");
-                    }
+                if ((i == j) && matrix[i][j] != 0)
+                {
+                    throw std::invalid_argument("No self-loops allowed.");
                 }
-            }
-        }
-        // Check for negative weights
-        for (size_t i = 0; i < size; ++i)
-        {
-            for (size_t j = 0; j < size; ++j)
-            {
                 if (matrix[i][j] < 0)
                 {
                     NegativeEdges = true;
                 }
+                if (!directed && matrix[i][j] != matrix[j][i])
+                {
+                    throw std::invalid_argument("Matrix must be symmetric for undirected graphs.");
+                }
             }
         }
 
-        NegativeEdges = false; // If we reach here, there are no negative edges
-
+        // If validation is successful, update the graph state
+        isDirected = directed;
         adjacencyMatrix = matrix;
     }
 

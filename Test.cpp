@@ -153,8 +153,8 @@ TEST_CASE("13-Non-Bipartite Test with Odd Cycle")
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {
         {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 1}};
+        {0, 0, 1},
+        {1, 0, 0}};
     g.loadGraph(graph, true);
     CHECK(ariel::Algorithms::isBipartite(g) == "The graph is not bipartite.");
 }
@@ -189,7 +189,7 @@ TEST_CASE("17-Empty Graph")
 {
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {}; // Empty graph
-    g.loadGraph(graph, true);
+    CHECK_THROWS(g.loadGraph(graph, true));
     CHECK(ariel::Algorithms::isConnected(g) == true);
     CHECK(ariel::Algorithms::negativeCycle(g) == "No negative cycle found");
     CHECK(ariel::Algorithms::shortestPath(g, 2, 0) == "No shortest path in empty graph");
@@ -327,7 +327,7 @@ TEST_CASE("26")
     ariel::Graph g;
     std::vector<std::vector<int>> graph = {
         {0, 3, 2, 8, 0},
-        {3, 5, 0, 7, 0},
+        {3, 0, 0, 7, 0},
         {2, 0, 0, 4, 9},
         {8, 7, 4, 0, 6},
         {0, 0, 9, 6, 0},
